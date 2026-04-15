@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCA Verde Vera - Riccardo Villani</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --color-orange: #C0522C;
+            --color-light-green: #B3CDCE;
+            --color-dark-green: #194444;
+        }
+        body {
+            background-color: #f8fafc;
+            color: var(--color-dark-green);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        .bg-custom-orange { background-color: var(--color-orange); }
+        .bg-custom-light { background-color: var(--color-light-green); }
+        .bg-custom-dark { background-color: var(--color-dark-green); }
+        .text-custom-orange { color: var(--color-orange); }
+        .text-custom-dark { color: var(--color-dark-green); }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+        }
+        .table-row:nth-child(even) { background-color: rgba(179, 205, 206, 0.1); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header Professionale -->
+    <header class="bg-custom-dark text-white py-16 px-6 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center relative z-10">
+            <div class="text-center md:text-left">
+                <span class="inline-block px-4 py-1 bg-custom-orange rounded-full text-xs font-bold uppercase tracking-widest mb-4">Report Tecnico LCA</span>
+                <h1 class="text-4xl md:text-6xl font-black mb-2 tracking-tight">Verde Vera</h1>
+                <p class="text-xl font-light opacity-80 uppercase tracking-widest">Liquido 250ml vs Solido 80g</p>
+            </div>
+            <div class="mt-8 md:mt-0 text-center md:text-right border-l-0 md:border-l-2 border-custom-orange pl-0 md:pl-8">
+                <p class="text-2xl font-black tracking-tighter">RICCARDO VILLANI</p>
+                <p class="text-xs font-bold uppercase tracking-widest opacity-60">Consulente Packaging Sostenibile</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-16">
+
+        <!-- Sezione Analisi Scenari (Nuova Tabella) -->
+        <section class="mb-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-black uppercase tracking-tighter">Analisi degli Scenari di Emissione</h2>
+                <div class="h-1 w-20 bg-custom-orange mx-auto mt-4"></div>
+            </div>
+            
+            <div class="overflow-hidden rounded-3xl border border-gray-200 shadow-2xl bg-white">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-custom-light bg-opacity-30">
+                            <th class="p-6 font-black uppercase text-xs tracking-widest">Scenario</th>
+                            <th class="p-6 font-black uppercase text-xs tracking-widest">CO2e / Unità</th>
+                            <th class="p-6 font-black uppercase text-xs tracking-widest">Note Tecniche</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-row border-b border-gray-100">
+                            <td class="p-6 font-bold text-custom-orange">Shampoo Solido <span class="block text-[10px] text-gray-500 font-normal uppercase">(In Negozio)</span></td>
+                            <td class="p-6 font-black text-xl">~0,04 kg</td>
+                            <td class="p-6 text-sm opacity-80 italic">Massimo risparmio generato dalla riduzione di logistica e packaging primario.</td>
+                        </tr>
+                        <tr class="table-row border-b border-gray-100">
+                            <td class="p-6 font-bold">Shampoo Liquido <span class="block text-[10px] text-gray-500 font-normal uppercase">(In Negozio)</span></td>
+                            <td class="p-6 font-black text-xl">~0,18 kg</td>
+                            <td class="p-6 text-sm opacity-80">Impatto significativo dovuto alla produzione del flacone HDPE e al trasporto di acqua.</td>
+                        </tr>
+                        <tr class="table-row border-b border-gray-100">
+                            <td class="p-6 font-bold">Shampoo Liquido <span class="block text-[10px] text-gray-500 font-normal uppercase">(Uso Domestico)</span></td>
+                            <td class="p-6 font-black text-xl">~1,40 kg</td>
+                            <td class="p-6 text-sm opacity-80">Valore standard che include il riscaldamento dell'acqua per il lavaggio.</td>
+                        </tr>
+                        <tr class="table-row">
+                            <td class="p-6 font-bold text-custom-orange">Shampoo Solido <span class="block text-[10px] text-gray-500 font-normal uppercase">(Uso Domestico)</span></td>
+                            <td class="p-6 font-black text-xl">~2,10 kg</td>
+                            <td class="p-6 text-sm opacity-80 italic">Aumento dell'impatto se il consumatore prolunga il tempo della doccia per lo scioglimento.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="mt-6 text-xs text-center opacity-50 italic">*L'analisi evidenzia come l'educazione al consumo sia importante quanto il design del packaging.</p>
+        </section>
+
+        <!-- Grafico Comparativo Scenari -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-32 items-center">
+            <div class="bg-white p-8 rounded-[2.5rem] shadow-xl border border-gray-100">
+                <h3 class="font-black uppercase text-sm mb-8 border-l-4 border-custom-orange pl-4">Confronto CO2e: Supply Chain vs Uso</h3>
+                <div class="chart-container">
+                    <canvas id="scenarioChart"></canvas>
+                </div>
+            </div>
+            <div class="space-y-6">
+                <h3 class="text-3xl font-black uppercase leading-none">Il Paradosso <br><span class="text-custom-orange">dell'Acqua Calda</span></h3>
+                <p class="text-lg opacity-80">
+                    Come consulente, è fondamentale notare che mentre il formato <strong>Verde Vera Solido</strong> abbatte dell'80% l'impatto pre-acquisto (da 0,18kg a 0,04kg), la fase d'uso può ribaltare il bilancio. 
+                </p>
+                <div class="p-6 bg-custom-light bg-opacity-20 rounded-2xl border border-custom-light">
+                    <p class="text-sm font-bold mb-2">Insight Tecnico:</p>
+                    <p class="text-sm italic">"Se lo scioglimento della matrice solida richiede un tempo di esposizione all'acqua calda superiore del 30%, l'impronta carbonica totale del ciclo di vita aumenta sensibilmente, rendendo l'efficienza di risciacquo del solido un KPI critico per l'Eco-Design."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- KPI Materici -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
+            <div class="p-8 bg-custom-dark text-white rounded-3xl shadow-xl text-center">
+                <p class="text-custom-orange text-4xl font-black mb-2">250ml</p>
+                <p class="text-[10px] uppercase tracking-widest opacity-60">Formato Liquido</p>
+                <div class="h-px w-12 bg-white opacity-20 mx-auto my-4"></div>
+                <p class="text-xs uppercase font-bold">~32g Plastica HDPE</p>
+            </div>
+            <div class="p-8 bg-white border-2 border-custom-light rounded-3xl shadow-xl text-center">
+                <p class="text-custom-orange text-4xl font-black mb-2">80g</p>
+                <p class="text-[10px] uppercase tracking-widest opacity-60 text-custom-dark">Formato Solido</p>
+                <div class="h-px w-12 bg-custom-dark opacity-10 mx-auto my-4"></div>
+                <p class="text-xs uppercase font-bold text-custom-dark">~7g Cartone FSC</p>
+            </div>
+            <div class="p-8 bg-custom-orange text-white rounded-3xl shadow-xl text-center">
+                <p class="text-white text-4xl font-black mb-2">-78%</p>
+                <p class="text-[10px] uppercase tracking-widest opacity-60">Efficienza Massa</p>
+                <div class="h-px w-12 bg-white opacity-20 mx-auto my-4"></div>
+                <p class="text-xs uppercase font-bold">Packaging Dematerializzato</p>
+            </div>
+        </div>
+
+        <!-- Sezione Acqua e Conclusioni -->
+        <section class="bg-white p-12 rounded-[3rem] shadow-2xl border border-gray-100 flex flex-col md:flex-row gap-16 items-center">
+            <div class="md:w-1/2">
+                <h3 class="text-3xl font-black mb-6 uppercase">Conclusioni Strategiche <br>Verde Vera</h3>
+                <div class="space-y-4 text-sm leading-relaxed opacity-80">
+                    <p>1. <strong>Ottimizzazione Logistica:</strong> Il solido da 80g riduce drasticamente i carichi in distribuzione, rendendo il brand leader in efficienza trasporti.</p>
+                    <p>2. <strong>Materiali:</strong> Il passaggio HDPE -> Cartone FSC risolve il problema del fine vita e del micro-inquinamento da plastica.</p>
+                    <p>3. <strong>Opportunità:</strong> Sviluppare una formula solida "fast-melting" per eguagliare i tempi d'uso del liquido e mantenere il vantaggio LCA anche in fase domestica.</p>
+                </div>
+            </div>
+            <div class="md:w-1/2 w-full">
+                <h5 class="text-xs font-black uppercase tracking-widest mb-6 opacity-40">Massa Packaging Primario (g)</h5>
+                <div class="chart-container" style="height: 250px;">
+                    <canvas id="weightChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Personale Riccardo Villani -->
+    <footer class="bg-custom-dark text-white py-16 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center border-t border-white border-opacity-10 pt-12">
+            <div class="text-center md:text-left">
+                <p class="text-custom-orange font-black text-3xl tracking-tighter mb-1">RICCARDO VILLANI</p>
+                <p class="text-custom-light text-xs uppercase tracking-[0.4em] font-bold opacity-80">Consulente Packaging Sostenibile</p>
+            </div>
+            <div class="mt-8 md:mt-0 text-center md:text-right space-y-2">
+                <p class="text-[10px] uppercase tracking-widest opacity-40">Studio di Life Cycle Assessment per Verde Vera</p>
+                <p class="text-xs font-bold text-custom-light">Certificato di Analisi Eco-Design &copy; 2024</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Scenario Chart
+        const ctxScenario = document.getElementById('scenarioChart').getContext('2d');
+        new Chart(ctxScenario, {
+            type: 'bar',
+            data: {
+                labels: ["In Negozio (Logistica+Pack)", "Uso Domestico (Standard)"],
+                datasets: [
+                    {
+                        label: 'Verde Vera Liquido',
+                        data: [0.18, 1.40],
+                        backgroundColor: '#194444',
+                        borderRadius: 10
+                    },
+                    {
+                        label: 'Verde Vera Solido',
+                        data: [0.04, 2.10],
+                        backgroundColor: '#C0522C',
+                        borderRadius: 10
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } },
+                scales: {
+                    y: { 
+                        beginAtZero: true, 
+                        title: { display: true, text: 'kg CO2e', font: { weight: 'bold' } },
+                        grid: { borderDash: [5, 5] }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Weight Chart
+        const ctxWeight = document.getElementById('weightChart').getContext('2d');
+        new Chart(ctxWeight, {
+            type: 'doughnut',
+            data: {
+                labels: ["Plastica (250ml)", "Cartone (80g)"],
+                datasets: [{
+                    data: [32, 7],
+                    backgroundColor: ['#194444', '#B3CDCE'],
+                    borderWidth: 0,
+                    hoverOffset: 20
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } },
+                cutout: '80%'
+            }
+        });
+    </script>
+</body>
+</html>
